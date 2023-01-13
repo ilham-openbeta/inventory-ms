@@ -1,15 +1,15 @@
 # Inventory API
 
 This is a simple API for recording inventory items using spring-boot.
+actually this is clone from my other repo https://github.com/ilham-openbeta/spring-inventory-jdbc
+the differences are :
+- using Java 17
+- Spring Boot 3
+- Service separation
+
+Some features is not working & removed because of upgrading java version.
 
 Features :
-
-- CRUD
-
-- Input Validation
-
-- Image Upload
-
 - JWT Authentication
 
 - SpringDoc OpenAPI
@@ -18,7 +18,7 @@ Features :
 
 Tested on :
 
-- OpenJDK 1.8.0_275
+- OpenJDK 17
 
 - MariaDB 10.4.16
 
@@ -73,22 +73,10 @@ mvnw clean install
 java -jar target/inventory-api-0.0.3-SNAPSHOT.jar
 ```
 
-## How to build and run Docker
-
-Note: for testing purposes.
-
-```bash
-docker-compose up -d --build
-```
-
 ## TODO
 
 - Unit Testing
-- Pagination
-- Disable swagger-ui on production build
-- Logger
-- Soft Delete
-- Created Date & Modified Date Column
+- Fix a lot of error
 
 ## License
 

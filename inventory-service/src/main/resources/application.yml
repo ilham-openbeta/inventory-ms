@@ -1,0 +1,20 @@
+server.servlet.context-path: /inventory-service
+spring:
+  messages.basename: i18n/messages
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
+server.port: 8081
+
+httpclient:
+  pool:
+    defaultMaxTotalConnections: 1000
+    defaultMaxConnectionsPerRoute: 100
+neutrino:
+  url: https://www.neutrinoapi.com/api/convert/
+  connectionRequestTimeout: 10000
+  connectTimeout: 10000
+  readTimeout: 10000
+  apiKey: ${N_API_KEY}
+  userId: ${N_USER_ID}

@@ -7,24 +7,20 @@ spring:
 
 server.port: 8081
 
-httpclient:
-  pool:
-    defaultMaxTotalConnections: 1000
-    defaultMaxConnectionsPerRoute: 100
+http-conn-pool:
+  max-total: 20
+  default-max-per-route: 20
+  max-per-routes:
+    - scheme: http
+      host: localhost
+      port: 8081
+      max-per-route: 20
+
 neutrino:
   url: https://neutrinoapi.net/convert
-  connectionRequestTimeout: 10000
-  connectTimeout: 10000
-  readTimeout: 10000
-  apiKey: ${N_API_KEY}
-  userId: ${N_USER_ID}
+  connection-request-timeout: 10000
+  connect-timeout: 10000
+  read-timeout: 10000
+  api-key: ${N_API_KEY}
+  user-id: ${N_USER_ID}
 
-logging:
-  level:
-    httpclient.wire: DEBUG
-    org:
-      apache.http: DEBUG
-      springframework:
-        web:
-          client:
-            RestTemplate: DEBUG

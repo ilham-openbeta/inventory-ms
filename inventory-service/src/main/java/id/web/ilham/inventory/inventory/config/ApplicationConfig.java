@@ -1,56 +1,33 @@
 package id.web.ilham.inventory.inventory.config;
 
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.apache.hc.core5.http.HttpHost;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
-
-import java.time.Duration;
 
 @Configuration
+@RequiredArgsConstructor
 public class ApplicationConfig {
 
-    @Value("${httpclient.pool.defaultMaxTotalConnections}")
-    private Integer defaultMaxTotalConnections;
-
-    @Value("${httpclient.pool.defaultMaxConnectionsPerRoute}")
-    private Integer defaultMaxConnectionsPerRoute;
-
-    @Value("${neutrino.connectionRequestTimeout}")
-    private Integer connectionRequestTimeout;
-
-    @Value("${neutrino.connectTimeout}")
-    private Integer connectTimeout;
-
-    @Value("${neutrino.readTimeout}")
-    private Integer readTimeout;
+    private final HttpHostsConfiguration httpHostsConfiguration;
 
     @Bean
-    public PoolingHttpClientConnectionManager poolingHttpClientConnectionManager() {
+    public PoolingHttpClientConnectionManager defaultPoolingHttpClientConnectionManager() {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(defaultMaxTotalConnections);
-        connectionManager.setDefaultMaxPerRoute(defaultMaxConnectionsPerRoute);
+        connectionManager.setMaxTotal(httpHostsConfiguration.getMaxTotal());
+        connectionManager.setDefaultMaxPerRoute(httpHostsConfiguration.getDefaultMaxPerRoute());
+
+        if (CollectionUtils.isNotEmpty(httpHostsConfiguration.getMaxPerRoutes())) {
+            for (HttpHostsConfiguration.HttpHostConfiguration httpHostConfig : httpHostsConfiguration.getMaxPerRoutes()) {
+                HttpHost host = new HttpHost(httpHostConfig.getScheme(), httpHostConfig.getHost(), httpHostConfig.getPort());
+                // Max per route for a specific host route
+                connectionManager.setMaxPerRoute(new HttpRoute(host), httpHostConfig.getMaxPerRoute());
+            }
+        }
+
         return connectionManager;
-    }
-
-    @Bean
-    public HttpClient defaultHttpClient() {
-        return HttpClientBuilder.create().setConnectionManager(poolingHttpClientConnectionManager()).build();
-    }
-
-    @Bean
-    public RestTemplate defaultRestTemplate() {
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectionRequestTimeout(connectionRequestTimeout);
-
-        return new RestTemplateBuilder()
-                .requestFactory(() -> factory)
-                .setConnectTimeout(Duration.ofMillis(connectTimeout))
-                .build();
     }
 }

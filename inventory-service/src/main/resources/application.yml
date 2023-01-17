@@ -12,9 +12,19 @@ httpclient:
     defaultMaxTotalConnections: 1000
     defaultMaxConnectionsPerRoute: 100
 neutrino:
-  url: https://www.neutrinoapi.com/api/convert/
+  url: https://neutrinoapi.net/convert
   connectionRequestTimeout: 10000
   connectTimeout: 10000
   readTimeout: 10000
   apiKey: ${N_API_KEY}
   userId: ${N_USER_ID}
+
+logging:
+  level:
+    httpclient.wire: DEBUG
+    org:
+      apache.http: DEBUG
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG

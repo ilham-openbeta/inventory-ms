@@ -30,7 +30,6 @@ public class NeutrinoAdaptor {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(USER_ID, userId);
         httpHeaders.set(API_KEY, apiKey);
-        httpHeaders.setAccept();
 
         return defaultRestTemplate.exchange(
                 url,

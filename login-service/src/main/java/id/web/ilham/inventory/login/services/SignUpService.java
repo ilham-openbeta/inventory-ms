@@ -25,7 +25,7 @@ public class SignUpService implements CommonService<SignupRequest, EmptyResponse
 
     private final RoleRepository roleRepository;
 
-    private final UserRolesRepository UserRolesRepository;
+    private final UserRolesRepository userRolesRepository;
 
     private final PasswordEncoder encoder;
 
@@ -46,7 +46,7 @@ public class SignUpService implements CommonService<SignupRequest, EmptyResponse
                 .password(encoder.encode(signUpRequest.getPassword()))
                 .build();
 
-        Role role = roleRepository.findByName("ROLE_USER")
+        Role role = roleRepository.findByName("USER")
                 .orElseThrow(() -> new ApplicationException(HttpStatus.NOT_FOUND, "error.role"));
 
         userRepository.save(user);
@@ -55,7 +55,7 @@ public class SignUpService implements CommonService<SignupRequest, EmptyResponse
                 .roleId(role.getId())
                 .build();
 
-        UserRolesRepository.save(userRoles);
+        userRolesRepository.save(userRoles);
 
         return ResponseMessage.success(new EmptyResponse());
     }

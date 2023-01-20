@@ -11,6 +11,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import id.web.ilham.inventory.login.models.UserDetailsImpl;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -34,22 +35,16 @@ import java.util.List;
 
 @Component
 @Log4j2
+@RequiredArgsConstructor
 public class JwtUtils {
 
-    @Value("${application.jwt.publicKey}")
-    private String publicKey;
-
-    @Value("${application.jwt.privateKey}")
-    private String privateKey;
-
-    @Value("${application.jwt.expirationMs}")
-    private int jwtExpirationMs;
+    private final JwtConfig jwtConfig;
 
     private KeyPair keyPair;
 
     @PostConstruct
     protected void init() {
-        keyPair = new KeyPair(getPublicKey(publicKey), getPrivateKey(privateKey));
+        keyPair = new KeyPair(getPublicKey(jwtConfig.getPublicKey()), getPrivateKey(jwtConfig.getPrivateKey()));
     }
 
     public String generateJwtToken(Authentication authentication) {
@@ -63,9 +58,9 @@ public class JwtUtils {
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(userPrincipal.getUsername())
-                .issuer("ilham.web.id")
+                .issuer(jwtConfig.getIssuer())
                 .issueTime(new Date())
-                .expirationTime(new Date((new Date()).getTime() + jwtExpirationMs))
+                .expirationTime(new Date((new Date()).getTime() + jwtConfig.getExpirationMs()))
                 .claim("roles", roles)
                 .build();
 

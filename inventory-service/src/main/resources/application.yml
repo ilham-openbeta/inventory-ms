@@ -1,11 +1,17 @@
+server.port: 8082
 server.servlet.context-path: /inventory-service
+
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://ilham.web.id/
+          jwk-set-uri: http://localhost:8081/login-service/api/auth/token/jwks.json
   messages.basename: i18n/messages
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
-
-server.port: 8081
 
 http-conn-pool:
   max-total: 20
@@ -24,3 +30,6 @@ neutrino:
   api-key: ${N_API_KEY}
   user-id: ${N_USER_ID}
 
+logging:
+  level:
+    root: DEBUG

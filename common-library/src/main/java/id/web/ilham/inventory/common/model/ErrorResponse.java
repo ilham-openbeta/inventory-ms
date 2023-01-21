@@ -8,6 +8,6 @@ import java.util.Map;
 
 @Data
 @Builder
-public class ErrorResponse implements CommonResponse{
+public class ErrorResponse implements CommonResponse {
     Map<String, List<String>> errors;
 }
